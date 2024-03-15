@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Censo 2023</title>
+    <link rel="stylesheet" href="CSS/estilos.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</head>
+<body onload="generarMenusDinamicos(),inicio()">
+    <div id="menuLogeo" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1 class="position-absolute top-40 start-50 translate-middle">Login</h1><br><br><br>
+        <label for="usuarioCensista">Ingresar usuario</label>
+        <input type="text" id="usuarioCensistaLogeo"><br><br>
+        <label for="contraseñaCensista">Ingresar contraseña</label>
+        <input type="password" id="contraseñaCensistaLogeo"><br><br><br>
+        <button class="btn btn-dark" type="button" id="logeoCensista">Ingresar</button>
+        <button class="btn btn-dark" type="button" id="logeoInvitado">Ingresar como Invitado</button>
+        <button class="btn btn-dark" type="button" id="btnRegistroCensista">Registrar Censista</button>
+    </div>
+    <div id="menuCensista" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1>Menu Censista</h1>
+        <button type="button" class="btn btn-dark" id="verEstadisticas">Ver Estadisticas</button>
+        <button type="button" class="btn btn-dark" id="censarPersonaCensista">Censar Persona/Consultar Pre Completado</button>
+        <button type="button" class="btn btn-dark" id="reasignarPersonaPorValidar">Reasignar Persona Pendiente de Validacion</button>
+        <button type="button" class="btn btn-dark" id="cerrarSesion">Cerrar Sesion</button>
+    </div>
+    <div id="menuInvitado" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1>Menu Invitado</h1>
+        <button type="button" class="btn btn-dark" id="censarPersonaInvitado">Censarse</button>
+        <button type="button" class="btn btn-dark" id="listaDeCensados">Lista de Censados</button>
+        <button type="button" class="btn btn-dark" id="volverInicio">Volver al Inicio</button>
+    </div>
+    <div id="registroCensista" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1>Registro Censistas</h1><br><br>
+        <label for="nombreCensista">Ingrese su nombre</label>
+        <input type="text" id="nombreCensista"><br><br>
+        <label for="usuarioCensista">Ingresar usuario</label>
+        <input type="text" id="usuarioCensista"><br><br>
+        <label for="contraseñaCensista">Ingresar contraseña</label>
+        <input type="password" id="contraseñaCensista"><br><br><br>
+        <button type="button" id="btnRegistrarCensista" class="btn btn-dark">Registrarme</button>
+        <button type="button" id="btnVolverIncioRegistroCensista" class="btn btn-dark">Volver al inicio</button>
+    </div>
+    <div id="informacionEstadisticaCensistas" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1>Informacion estadistica</h1><br>
+        <p id="totalCensados"></p>
+        <p id="censadosPorDepartamento"></p>
+        <p id="porcentajePendientes"></p>
+        <select id="departamentosEstadisticas" onchange="mostrarEdades(this.value)"></select>
+        <p id="porcentajeEdades"></p>
+        <button type="button" class="btn btn-dark" id="volverMenuEstadistica">Volver al Menu</button>
+    </div>
+    <div id="listaCensados" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1 id="tituloListaCensados">Lista de Censados</h1><br>
+        <table id="tablaListaDeCensados" class="table-bordered"></table><br>
+        <button type="button" id="volverMenuInvitadoTablaCensados" class="btn btn-dark">Volver al Menu</button>
+    </div>
+    <div id="reasignacionPersonasPendientesValidacion" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h1>Reasignar Personas no Validadas</h1>
+        <label for="censosAsignadasACensista">Seleccione Censo que Desea Reasignar</label>
+        <select id="censosAsignadasACensista">
+            <option value="">Seleccione...</option>
+        </select>
+        <label for="censistasDisponibles">Seleccione al Censista que Desea Asignarlo</label>
+        <select id="censistasDisponibles">
+            <option value="">Seleccione...</option>
+        </select>
+        <button type="button" class="btn btn-dark" id="btnReasignarCenso">Reasignar Censo</button>
+        <button type="button" class="btn btn-dark" id="btnVolverMenuReasignacion">Volver al Menu</button>
+    </div>
+    <div id="ingresoDeDatosCenso" class="jumbotron position-absolute top-50 start-50 translate-middle">
+        <h2>Ingreso de datos</h2><br>
+        <label for="menuCensosAsignados" id="labelMenuCensosAsignados" style="display: none;">Seleccione uno de los Censos que Tiene Asignado</label>
+        <select id="menuCensosAsignados" style="display: none;" onchange="cargarDatosCensista(this.value)">
+            <option value="">Seleccione...</option>
+        </select><br><br>
+        <label for="buscarCensoCargados" id="labelBuscarCenso" style="display: none;">Ingrese su Cedula Para Consultar Datos Pre Cargados o Para Eliminar sus Datos</label><br>
+        <input type="text" id="buscarCensoCargados" style="display: none;"><br>
+        <button type="button" class="btn btn-dark" id="buscarCensoPreCompletado" hidden>Buscar Censos Pre Completado</button>
+        <button type="button" class="btn btn-dark" id="eliminarDatos" hidden>Eliminar Datos</button><br><br>   
+        <label for="nombreCensado">Ingres su Nombre</label>
+        <input type="text" id="nombreCensado"><br><br>
+        <label for="apellidoCensado">Ingrese su Apellido</label>
+        <input type="text" id="apellidoCensado"><br><br>
+        <label for="edadCensado">Ingrese su Edad</label>
+        <input type="number" id="edadCensado"><br><br>
+        <label for="cedulaCensado">Ingrese su Cedula</label>
+        <input type="text" id="cedulaCensado"><br><br>
+        <label for="departamentos">Seleccione su Departamento de Residencia</label>
+        <select id="departamentos">
+            <option value="">Seleccione...</option>
+        </select><br><br>
+        <label for="ocupacion">Seleccione su Ocupacion</label>
+        <select id="ocupacion">
+            <option value="">Seleccione...</option>
+        </select><br><br>
+        <button type="button" class="btn btn-dark" id="procesarDatos" hidden>Guardar Datos</button>
+        <button type="button" class="btn btn-dark" id="procesarDatosCensista" hidden>Guardar Datos</button>
+        <button type="button" class="btn btn-dark" id="confirmarDatos" hidden>Validar Datos</button>
+        <button type="button" class="btn btn-dark" id="volverMenuCensista" hidden>Volver al Menu</button>
+        <button type="button" class="btn btn-dark" id="volverMenuInvitado" hidden>Volver al Menu</button>
+    </div>
+    <script src="/JS/censo.js"></script>
+    <script src="/JS/censista.js"></script>
+    <script src="/JS/sistema.js"></script> 
+    <script src="/JS/obligatorio.js"></script>
+</body>
+</html>
